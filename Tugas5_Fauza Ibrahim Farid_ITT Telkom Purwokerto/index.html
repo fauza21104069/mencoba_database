@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nilai Mahasiswa</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ccc;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Nilai Mahasiswa</h3>
+    <h3>Input Nilai Mahasiswa</h3>
+    <form id="data-form">
+      <label for="nama">Nama:</label>
+      <input type="text" id="nama" required />
+      <label for="matakuliah">Mata Kuliah:</label>
+      <input type="text" id="matakuliah" required />
+      <label for="nilai">Nilai:</label>
+      <input type="number" id="nilai" required />
+      <button type="submit">Tambah Data</button>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Mata Kuliah</th>
+          <th>Nilai</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="data-table">
+        <!-- Data mahasiswa akan ditampilkan di sini -->
+      </tbody>
+    </table>
+    <script>
+      const dataForm = document.getElementById("data-form");
+      const namaInput = document.getElementById("nama");
+      const mataKuliahInput = document.getElementById("matakuliah");
+      const nilaiInput = document.getElementById("nilai");
+      const dataTable = document.getElementById("data-table");
+
+      let dataMahasiswa = [];
+
+      dataForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const nama = namaInput.value;
+        const mataKuliah = mataKuliahInput.value;
+        const nilai = parseFloat(nilaiInput.value);
+
+        if (nama && mataKuliah && !isNaN(nilai)) {
+          tambahData(nama, mataKuliah, nilai);
+          tampilkanData();
+          dataForm.reset();
+        } else {
+          alert("Semua kolom harus diisi dan nilai harus berupa angka.");
+        }
+      });
+
+      function tambahData(nama, mataKuliah, nilai) {
+        dataMahasiswa.push({ nama, mataKuliah, nilai });
+      }
+
+      function tampilkanData() {
+        dataTable.innerHTML = "";
+
+        dataMahasiswa.forEach((mahasiswa, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+                    <td>${mahasiswa.nama}</td>
+                    <td>${mahasiswa.mataKuliah}</td>
+                    <td>${mahasiswa.nilai}</td>
+                    <td>
+                        <button onclick="editData(${index})">Edit</button>
+                        <button onclick="hapusData(${index})">Hapus</button>
+                    </td>
+                `;
+          dataTable.appendChild(row);
+        });
+      }
+
+      function editData(index) {
+        const mahasiswa = dataMahasiswa[index];
+        namaInput.value = mahasiswa.nama;
+        mataKuliahInput.value = mahasiswa.mataKuliah;
+        nilaiInput.value = mahasiswa.nilai;
+
+        dataMahasiswa.splice(index, 1);
+        tampilkanData();
+      }
+
+      function hapusData(index) {
+        dataMahasiswa.splice(index, 1);
+        tampilkanData();
+      }
+    </script>
+  </body>
+</html>
